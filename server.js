@@ -5,6 +5,8 @@ try {
   console.error("https support is disabled!");
 }
 const fs = require("node:fs");
+const url = require("url");
+const sha1 = require("sha1");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
@@ -12,7 +14,8 @@ const options = {
 };
 
 const app = https.createServer(options, (req, res) => {
-  const { signature, timestamp, nonce, echostr } = req.query;
+  const parsedUrl = url.parse(req.url, true);
+  const { signature, timestamp, nonce, echostr } = parsedUrl.query;
 
   // 服务器的token
   const token = "TOKEN";
@@ -28,12 +31,11 @@ const app = https.createServer(options, (req, res) => {
   // 获得加密后的字符串可与signature对比，验证标识该请求来源于微信服务器
   if (shaStr === signature) {
     // 确认此次GET请求来自微信服务器，请原样返回echostr参数内容，则接入生效
-    res.send(echostr);
+    res.end(echostr);
   } else {
     //否则接入失败。
-    res.send("no");
+    res.end("no");
   }
-
   // res.writeHead(200, {
   //   "Content-Type": "text/html;charset=utf-8",
   // });
