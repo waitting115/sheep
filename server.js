@@ -16,6 +16,7 @@ const options = {
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   const { signature, timestamp, nonce, echostr } = parsedUrl.query;
+  console.log(`in:${signature}, ${timestamp}, ${nonce}, ${echostr}`);
 
   // 服务器的token
   const token = "TOKEN";
@@ -27,7 +28,7 @@ const app = https.createServer(options, (req, res) => {
   // 将三个参数字符串拼接成一个字符串进行sha1加密,npm install --save sha1
   const str = arrSort.join("");
   const shaStr = sha1(str);
-
+  console.log(1, shaStr, signature);
   // 获得加密后的字符串可与signature对比，验证标识该请求来源于微信服务器
   if (shaStr === signature) {
     // 确认此次GET请求来自微信服务器，请原样返回echostr参数内容，则接入生效
