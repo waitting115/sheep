@@ -20,18 +20,48 @@ const app = https.createServer(options, (req, res) => {
   console.log("parsedUrl", parsedUrl);
   console.log("req.method:", req.method);
   if (req.method === "GET") {
-    console.log("微信服务器get验证");
-    // 微信服务器验证 微信时不时的就会验证一下
-    const token = "TOKEN";
-    const { signature, timestamp, nonce, echostr } = parsedUrl.query;
-    const arr = [token, timestamp, nonce].sort();
-    const shaStr = sha1(arr.join(""));
+    if (parsedUrl.pathname === "/") {
+      console.log("微信服务器get验证");
+      // 微信服务器验证 微信时不时的就会验证一下
+      const token = "TOKEN";
+      const { signature, timestamp, nonce, echostr } = parsedUrl.query;
+      const arr = [token, timestamp, nonce].sort();
+      const shaStr = sha1(arr.join(""));
 
-    if (shaStr === signature) {
-      res.end(echostr);
+      console.log("是否验证成功：", shaStr === signature);
+      if (shaStr === signature) {
+        res.end(echostr);
+      } else {
+        res.writeHead(401);
+        res.end("Authentication failed");
+      }
+    } else if (parsedUrl.pathname === "/webhook") {
+      const payload = JSON.stringify(req.body);
+      const headers = req.headers;
+
+      // 验证Webhook请求的签名
+      // const hmac = crypto.createHmac("sha1", secret);
+      const hmac = sha1(secret);
+
+      hmac.update(payload);
+      const computedSignature = `sha1=${hmac.digest("hex")}`;
+      const expectedSignature = headers["x-hub-signature"];
+
+      if (computedSignature !== expectedSignature) {
+        console.log("webhook验证失败");
+        res.status(401).send("Unauthorized");
+        return;
+      }
+
+      // 在这里处理提交事件
+      const commitInfo = req.body;
+      console.log("Received commit:", commitInfo);
+
+      res.status(200).send("Webhook received");
     } else {
-      res.writeHead(401);
-      res.end("Authentication failed");
+      console.log(`未知的url：${req.url}`);
+      res.writeHead(200, { "Content-Type": "application/xml" });
+      res.end(xml); // 无论如何都要回复微信
     }
   } else if (req.method === "POST") {
     // 消息请求为post，且每次都传过来如下参数：?signature=509549c13e80a6b17ade82124aa74556e8fdbeb4&timestamp=1698069683&nonce=1978155440&openid=oyGGG5o9LuNFWeGAz18jVmbI7XZg
@@ -75,34 +105,11 @@ const app = https.createServer(options, (req, res) => {
             res.writeHead(200, { "Content-Type": "application/xml" });
             res.end(xml);
           } else {
-            res.writeHead(400);
-            res.end("Invalid message format");
+            res.writeHead(200, { "Content-Type": "application/xml" });
+            res.end(normalReq);
           }
         });
       });
-    } else if (parsedUrl.pathname === "/webhook") {
-      const payload = JSON.stringify(req.body);
-      const headers = req.headers;
-
-      // 验证Webhook请求的签名
-      // const hmac = crypto.createHmac("sha1", secret);
-      const hmac = sha1(secret);
-
-      hmac.update(payload);
-      const computedSignature = `sha1=${hmac.digest("hex")}`;
-      const expectedSignature = headers["x-hub-signature"];
-
-      if (computedSignature !== expectedSignature) {
-        console.log("webhook验证失败");
-        res.status(401).send("Unauthorized");
-        return;
-      }
-
-      // 在这里处理提交事件
-      const commitInfo = req.body;
-      console.log("Received commit:", commitInfo);
-
-      res.status(200).send("Webhook received");
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
