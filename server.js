@@ -13,6 +13,7 @@ const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
   cert: fs.readFileSync("./https/1_miemie.online_bundle.crt"),
 };
+const secret = "88234516"; // Git仓库提供的Webhook秘密令牌
 
 const app = https.createServer(options, (req, res) => {
   // const parsedUrl = url.parse(req.url, true);
@@ -49,8 +50,8 @@ const app = https.createServer(options, (req, res) => {
   //   res.write("good nodejs,当前请求路径是/api的话会执行这里的代码");
   //   res.end();
   // }
-  console.log("req", req);
   if (req.method === "GET") {
+    console.log("微信服务器get验证");
     // 微信服务器验证
     const token = "TOKEN";
     const query = url.parse(req.url, true).query;
@@ -65,43 +66,71 @@ const app = https.createServer(options, (req, res) => {
       res.end("Authentication failed");
     }
   } else if (req.method === "POST") {
-    // 处理用户消息
-    let data = "";
+    console.log("post url:", req.url);
+    if (req.url === "/") {
+      // 处理用户消息
+      let data = "";
 
-    req.on("data", (chunk) => {
-      data += chunk;
-    });
-
-    req.on("end", () => {
-      // 解析XML数据，这里使用xml2js库
-      const parser = new xml2js.Parser({ explicitArray: false });
-
-      parser.parseString(data, (err, result) => {
-        if (!err && result && result.xml) {
-          const message = result.xml;
-          console.log('message:', message);
-
-          // 在这里编写处理用户消息的代码
-          // message 包含用户发送的消息内容，详见微信公众平台开发文档
-
-          // 示例：回复用户消息
-          const replyMessage = {
-            ToUserName: message.FromUserName,
-            FromUserName: message.ToUserName,
-            CreateTime: Math.floor(Date.now() / 1000),
-            MsgType: "text",
-            Content: "你发送了：" + message.Content,
-          };
-
-          const xml = buildXMLReply(replyMessage);
-          res.writeHead(200, { "Content-Type": "application/xml" });
-          res.end(xml);
-        } else {
-          res.writeHead(400);
-          res.end("Invalid message format");
-        }
+      req.on("data", (chunk) => {
+        data += chunk;
       });
-    });
+
+      req.on("end", () => {
+        // 解析XML数据，这里使用xml2js库
+        const parser = new xml2js.Parser({ explicitArray: false });
+
+        parser.parseString(data, (err, result) => {
+          if (!err && result && result.xml) {
+            const message = result.xml;
+            console.log("message:", message);
+
+            // 在这里编写处理用户消息的代码
+            // message 包含用户发送的消息内容，详见微信公众平台开发文档
+
+            // 示例：回复用户消息
+            const replyMessage = {
+              ToUserName: message.FromUserName,
+              FromUserName: message.ToUserName,
+              CreateTime: Math.floor(Date.now() / 1000),
+              MsgType: "text",
+              Content: "你发送了：" + message.Content,
+            };
+
+            const xml = buildXMLReply(replyMessage);
+            res.writeHead(200, { "Content-Type": "application/xml" });
+            res.end(xml);
+          } else {
+            res.writeHead(400);
+            res.end("Invalid message format");
+          }
+        });
+      });
+    } else if (req.url === "webhook") {
+      const payload = JSON.stringify(req.body);
+      const headers = req.headers;
+
+      // 验证Webhook请求的签名
+      // const hmac = crypto.createHmac("sha1", secret);
+      const hmac = sha1(secret);
+
+      hmac.update(payload);
+      const computedSignature = `sha1=${hmac.digest("hex")}`;
+      const expectedSignature = headers["x-hub-signature"];
+
+      if (computedSignature !== expectedSignature) {
+        console.log('webhook验证失败');
+        res.status(401).send("Unauthorized");
+        return;
+      }
+
+      // 在这里处理提交事件
+      const commitInfo = req.body;
+      console.log("Received commit:", commitInfo);
+
+      res.status(200).send("Webhook received");
+    } else {
+      console.log(`未知的url：${req.url}`);
+    }
   }
 });
 
