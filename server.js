@@ -16,46 +16,14 @@ const options = {
 const secret = "88234516"; // Git仓库提供的Webhook秘密令牌
 
 const app = https.createServer(options, (req, res) => {
-  // const parsedUrl = url.parse(req.url, true);
-  // const { signature, timestamp, nonce, echostr } = parsedUrl.query;
-  // console.log(`in:${signature}, ${timestamp}, ${nonce}, ${echostr}`);
-
-  // // 服务器的token
-  // const token = "TOKEN";
-
-  // // 将token、timestamp、nonce三个参数进行字典序排序
-  // const arrSort = [token, timestamp, nonce];
-  // arrSort.sort();
-
-  // // 将三个参数字符串拼接成一个字符串进行sha1加密,npm install --save sha1
-  // const str = arrSort.join("");
-  // const shaStr = sha1(str);
-  // console.log(1, shaStr, signature);
-  // // 获得加密后的字符串可与signature对比，验证标识该请求来源于微信服务器
-  // if (shaStr === signature) {
-  //   // 确认此次GET请求来自微信服务器，请原样返回echostr参数内容，则接入生效
-  //   res.end(echostr);
-  // } else {
-  //   //否则接入失败。
-  //   res.end("no");
-  // }
-  // // res.writeHead(200, {
-  // //   "Content-Type": "text/html;charset=utf-8",
-  // // });
-  // // if (req.url == "/") {
-  // //   res.write("good nodejs,当前请求路径是/的话会执行这里的代码");
-  // //   res.end();
-  // // }
-  // if (req.url == "/api") {
-  //   res.write("good nodejs,当前请求路径是/api的话会执行这里的代码");
-  //   res.end();
-  // }
+  const parsedUrl = url.parse(req.url, true);
+  console.log("parsedUrl", parsedUrl);
+  console.log("req.method:", req.method);
   if (req.method === "GET") {
     console.log("微信服务器get验证");
-    // 微信服务器验证
+    // 微信服务器验证 微信时不时的就会验证一下
     const token = "TOKEN";
-    const query = url.parse(req.url, true).query;
-    const { signature, timestamp, nonce, echostr } = query;
+    const { signature, timestamp, nonce, echostr } = parsedUrl.query;
     const arr = [token, timestamp, nonce].sort();
     const shaStr = sha1(arr.join(""));
 
@@ -66,8 +34,15 @@ const app = https.createServer(options, (req, res) => {
       res.end("Authentication failed");
     }
   } else if (req.method === "POST") {
-    console.log("post url:", req.url);
-    if (req.url === "/") {
+    // 消息请求为post，且每次都传过来如下参数：?signature=509549c13e80a6b17ade82124aa74556e8fdbeb4&timestamp=1698069683&nonce=1978155440&openid=oyGGG5o9LuNFWeGAz18jVmbI7XZg
+    const normalReq = buildXMLReply({
+      ToUserName: "to",
+      FromUserName: "from",
+      CreateTime: Math.floor(Date.now() / 1000),
+      MsgType: "text",
+      Content: "默认回复",
+    });
+    if (parsedUrl.pathname === "/") {
       // 处理用户消息
       let data = "";
 
@@ -105,7 +80,7 @@ const app = https.createServer(options, (req, res) => {
           }
         });
       });
-    } else if (req.url === "webhook") {
+    } else if (parsedUrl.pathname === "webhook") {
       const payload = JSON.stringify(req.body);
       const headers = req.headers;
 
@@ -118,7 +93,7 @@ const app = https.createServer(options, (req, res) => {
       const expectedSignature = headers["x-hub-signature"];
 
       if (computedSignature !== expectedSignature) {
-        console.log('webhook验证失败');
+        console.log("webhook验证失败");
         res.status(401).send("Unauthorized");
         return;
       }
@@ -130,7 +105,11 @@ const app = https.createServer(options, (req, res) => {
       res.status(200).send("Webhook received");
     } else {
       console.log(`未知的url：${req.url}`);
+      res.writeHead(200, { "Content-Type": "application/xml" });
+      res.end(xml); // 无论如何都要回复微信
     }
+  } else {
+    console.log("未知的请求方法：", req.method);
   }
 });
 
