@@ -80,7 +80,7 @@ const app = https.createServer(options, (req, res) => {
           }
         });
       });
-    } else if (parsedUrl.pathname === "webhook") {
+    } else if (parsedUrl.pathname === "/webhook") {
       const payload = JSON.stringify(req.body);
       const headers = req.headers;
 
