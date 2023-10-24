@@ -113,7 +113,7 @@ const app = https.createServer(options, (req, res) => {
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
-      res.end(xml); // 无论如何都要回复微信
+      res.end(normalReq); // 无论如何都要回复微信
     }
   } else {
     console.log("未知的请求方法：", req.method);
