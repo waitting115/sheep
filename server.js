@@ -89,6 +89,7 @@ const app = https.createServer(options, (req, res) => {
       });
     } else if (parsedUrl.pathname === "/webhook") {
       const payload = JSON.stringify(req.body);
+      console.log('payload', payload);
       const headers = req.headers;
 
       // 验证Webhook请求的签名
@@ -99,6 +100,7 @@ const app = https.createServer(options, (req, res) => {
       const computedSignature = `sha1=${hmac.digest("hex")}`;
       const expectedSignature = headers["x-hub-signature"];
 
+      console.log(88, computedSignature, expectedSignature)
       if (computedSignature !== expectedSignature) {
         console.log("webhook验证失败");
         res.status(401).send("Unauthorized");
