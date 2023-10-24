@@ -8,6 +8,7 @@ const fs = require("node:fs");
 const url = require("url");
 const sha1 = require("sha1");
 const xml2js = require("xml2js");
+const crypto = require("crypto");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
@@ -92,8 +93,7 @@ const app = https.createServer(options, (req, res) => {
       const headers = req.headers;
 
       // 验证Webhook请求的签名
-      // const hmac = crypto.createHmac("sha1", secret);
-      const hmac = sha1(secret);
+      const hmac = crypto.createHmac("sha1", secret);
       console.log('hmac:', hmac);
 
       hmac.update(payload);
