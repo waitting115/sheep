@@ -18,7 +18,6 @@ const secret = "88234516"; // Git仓库提供的Webhook秘密令牌
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   console.log("parsedUrl", parsedUrl);
-  console.log("req.method:", req.method);
   if (req.method === "GET") {
     if (parsedUrl.pathname === "/") {
       console.log("微信服务器get验证");
@@ -35,29 +34,6 @@ const app = https.createServer(options, (req, res) => {
         res.writeHead(401);
         res.end("Authentication failed");
       }
-    } else if (parsedUrl.pathname === "/webhook") {
-      const payload = JSON.stringify(req.body);
-      const headers = req.headers;
-
-      // 验证Webhook请求的签名
-      // const hmac = crypto.createHmac("sha1", secret);
-      const hmac = sha1(secret);
-
-      hmac.update(payload);
-      const computedSignature = `sha1=${hmac.digest("hex")}`;
-      const expectedSignature = headers["x-hub-signature"];
-
-      if (computedSignature !== expectedSignature) {
-        console.log("webhook验证失败");
-        res.status(401).send("Unauthorized");
-        return;
-      }
-
-      // 在这里处理提交事件
-      const commitInfo = req.body;
-      console.log("Received commit:", commitInfo);
-
-      res.status(200).send("Webhook received");
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
@@ -110,6 +86,30 @@ const app = https.createServer(options, (req, res) => {
           }
         });
       });
+    } else if (parsedUrl.pathname === "/webhook") {
+      const payload = JSON.stringify(req.body);
+      const headers = req.headers;
+
+      // 验证Webhook请求的签名
+      // const hmac = crypto.createHmac("sha1", secret);
+      const hmac = sha1(secret);
+      console.log('hmac:', hmac);
+
+      hmac.update(payload);
+      const computedSignature = `sha1=${hmac.digest("hex")}`;
+      const expectedSignature = headers["x-hub-signature"];
+
+      if (computedSignature !== expectedSignature) {
+        console.log("webhook验证失败");
+        res.status(401).send("Unauthorized");
+        return;
+      }
+
+      // 在这里处理提交事件
+      const commitInfo = req.body;
+      console.log("Received commit:", commitInfo);
+
+      res.status(200).send("Webhook received");
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
