@@ -99,36 +99,39 @@ const app = https.createServer(options, (req, res) => {
         });
       });
     } else if (parsedUrl.pathname === "/webhook") {
-      handlePostData(req, (error, postData) => {
+      handlePostData(req, (error, payload) => {
         if (error) {
           res.writeHead(500, { "Content-Type": "text/plain" });
           res.end("Internal Server Error");
         }
-        const payload = JSON.stringify(postData);
-        console.log("payload：", payload);
-        if (!payload) return;
-        const headers = req.headers;
 
-        // 验证Webhook请求的签名
-        const hmac = crypto.createHmac("sha1", gitSecret);
-        console.log("hmac:", hmac);
+        // 获取请求标头中的签名
+        const signature = req.headers["x-hub-signature-256"];
 
+        // 创建一个HMAC对象，使用你的Webhook密钥
+        const hmac = crypto.createHmac("sha256", gitSecret);
         hmac.update(payload);
-        const computedSignature = `sha1=${hmac.digest("hex")}`;
-        const expectedSignature = headers["x-hub-signature"];
 
-        console.log(88, computedSignature, expectedSignature);
-        if (computedSignature !== expectedSignature) {
-          console.log("webhook验证失败");
-          res.status(401).send("Unauthorized");
-          return;
+        // 计算生成的签名
+        const computedSignature = `sha256=${hmac.digest("hex")}`;
+
+        console.log("匹配结果：", signature, computedSignature);
+        // 检查签名是否匹配
+        if (signature === computedSignature) {
+          // 签名验证成功
+          console.log("Webhook verification successful");
+
+          // 在这里执行你的Webhook处理逻辑
+          // 例如，可以执行代码拉取、部署、通知等操作
+
+          res.writeHead(200, { "Content-Type": "text/plain" });
+          res.end("Webhook received");
+        } else {
+          // 签名验证失败
+          console.error("Webhook verification failed");
+          res.writeHead(401, { "Content-Type": "text/plain" });
+          res.end("Unauthorized");
         }
-
-        // 在这里处理提交事件
-        const commitInfo = req.body;
-        console.log("Received commit:", commitInfo);
-
-        res.status(200).send("Webhook received");
       });
     } else {
       console.log(`未知的url：${req.url}`);
