@@ -125,7 +125,7 @@ const app = https.createServer(options, (req, res) => {
           // 在这里执行你的Webhook处理逻辑，例如，可以执行代码拉取、部署、通知等操作
 
           // 执行Shell脚本
-          exec("sh /update.sh", (error, stdout, stderr) => {
+          exec("sh update.sh", (error, stdout, stderr) => {
             if (error) {
               console.error(`Error executing script: ${error}`);
             } else {
@@ -153,7 +153,7 @@ const app = https.createServer(options, (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log("node服务在localhost:8080端口启动!");
+  console.log("node服务在localhost:8080端口启动");
 });
 
 // 辅助函数：构建XML回复消息
