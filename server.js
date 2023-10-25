@@ -9,22 +9,30 @@ const url = require("url");
 const sha1 = require("sha1");
 const xml2js = require("xml2js");
 const crypto = require("crypto");
+const { searchGoods } = require("./pdd/index");
+const { gitSecret } = require("./public");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
   cert: fs.readFileSync("./https/1_miemie.online_bundle.crt"),
 };
-const secret = "88234516"; // Git仓库提供的Webhook秘密令牌
 
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   console.log("parsedUrl", parsedUrl);
   if (req.method === "GET") {
     if (parsedUrl.pathname === "/") {
-      console.log("微信服务器get验证");
       // 微信服务器验证 微信时不时的就会验证一下
       const token = "TOKEN";
       const { signature, timestamp, nonce, echostr } = parsedUrl.query;
+      console.log(
+        "微信服务器get验证，信息：",
+        signature,
+        timestamp,
+        nonce,
+        echostr
+      );
+
       const arr = [token, timestamp, nonce].sort();
       const shaStr = sha1(arr.join(""));
 
@@ -61,15 +69,12 @@ const app = https.createServer(options, (req, res) => {
         // 解析XML数据，这里使用xml2js库
         const parser = new xml2js.Parser({ explicitArray: false });
 
-        parser.parseString(data, (err, result) => {
+        parser.parseString(data, async (err, result) => {
           if (!err && result && result.xml) {
             const message = result.xml;
             console.log("message:", message);
 
-            // 在这里编写处理用户消息的代码
-            // message 包含用户发送的消息内容，详见微信公众平台开发文档
-
-            // 示例：回复用户消息
+            // 回复用户消息
             const replyMessage = {
               ToUserName: message.FromUserName,
               FromUserName: message.ToUserName,
@@ -77,6 +82,16 @@ const app = https.createServer(options, (req, res) => {
               MsgType: "text",
               Content: "你发送了：" + message.Content,
             };
+
+            // 在这里编写处理用户消息的代码
+            try {
+              const goodsMessage = await searchGoods(message);
+              replyMessage.Content = goodsMessage;
+            } catch (error) {
+              console.log("搜索关键字出错：", error);
+            }
+            const goodsMessage = await searchGoods(message);
+            replyMessage.Content = goodsMessage;
 
             const xml = buildXMLReply(replyMessage);
             res.writeHead(200, { "Content-Type": "application/xml" });
@@ -89,18 +104,18 @@ const app = https.createServer(options, (req, res) => {
       });
     } else if (parsedUrl.pathname === "/webhook") {
       const payload = JSON.stringify(req.body);
-      console.log('payload', payload);
+      console.log("payload", payload);
       const headers = req.headers;
 
       // 验证Webhook请求的签名
-      const hmac = crypto.createHmac("sha1", secret);
-      console.log('hmac:', hmac);
+      const hmac = crypto.createHmac("sha1", gitSecret);
+      console.log("hmac:", hmac);
 
       hmac.update(payload);
       const computedSignature = `sha1=${hmac.digest("hex")}`;
       const expectedSignature = headers["x-hub-signature"];
 
-      console.log(88, computedSignature, expectedSignature)
+      console.log(88, computedSignature, expectedSignature);
       if (computedSignature !== expectedSignature) {
         console.log("webhook验证失败");
         res.status(401).send("Unauthorized");
