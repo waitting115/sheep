@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { clientId } = require("../public");
-const { getAccessToken } = require("./vx/AccessToken");
+const { getAccessToken } = require("../vx/AccessToken");
 
 const searchGoods = async (title) => {
   // 使用商品标题进行拼多多搜索
