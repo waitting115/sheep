@@ -175,6 +175,7 @@ function handlePostData(req, callback) {
   });
 
   req.on("error", (error) => {
+    console.log("postData error:", error);
     callback(error, null);
   });
 }
