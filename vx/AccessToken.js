@@ -1,4 +1,4 @@
-const { appId, appSecret } = require("./public");
+const { appId, appSecret } = require("../public");
 
 let access_token = ""; // 2h有效期 需定时刷新
 let lastTime = "";
