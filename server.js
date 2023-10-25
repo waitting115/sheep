@@ -153,7 +153,7 @@ const app = https.createServer(options, (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log("node服务在localhost:8080端口启动");
+  console.log("node服务在localhost:8080端口启动!");
 });
 
 // 辅助函数：构建XML回复消息
@@ -178,7 +178,6 @@ function handlePostData(req, callback) {
   });
 
   req.on("end", () => {
-    console.log("postData:", data);
     callback(null, data);
   });
 
