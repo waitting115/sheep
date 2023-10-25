@@ -11,6 +11,7 @@ const xml2js = require("xml2js");
 const crypto = require("crypto");
 const { searchGoods } = require("./pdd/index");
 const { gitSecret } = require("./public");
+const { exec } = require("child_process");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
@@ -121,9 +122,16 @@ const app = https.createServer(options, (req, res) => {
           // 签名验证成功
           console.log("Webhook verification successful");
 
-          // 在这里执行你的Webhook处理逻辑
+          // 在这里执行你的Webhook处理逻辑，例如，可以执行代码拉取、部署、通知等操作
 
-          // 例如，可以执行代码拉取、部署、通知等操作
+          // 执行Shell脚本
+          exec("sh /update.sh", (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error executing script: ${error}`);
+            } else {
+              console.log(`Script output: ${stdout}`);
+            }
+          });
 
           res.writeHead(200, { "Content-Type": "text/plain" });
           res.end("Webhook received");
@@ -175,7 +183,6 @@ function handlePostData(req, callback) {
   });
 
   req.on("error", (error) => {
-    console.log("postData error:", error);
     callback(error, null);
   });
 }
