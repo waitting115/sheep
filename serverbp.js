@@ -59,16 +59,18 @@ const app = https.createServer(options, (req, res) => {
       Content: "默认回复",
     });
     if (parsedUrl.pathname === "/") {
-      handlePostData(req, (error, postData) => {
-        if (error) {
-          console.error("数据解析错误：", error);
-          res.writeHead(500, { "Content-Type": "text/plain" });
-          res.end("Internal Server Error");
-        }
+      // 处理用户消息
+      let data = "";
+
+      req.on("data", (chunk) => {
+        data += chunk;
+      });
+
+      req.on("end", () => {
         // 解析XML数据，这里使用xml2js库
         const parser = new xml2js.Parser({ explicitArray: false });
 
-        parser.parseString(postData, async (err, result) => {
+        parser.parseString(data, async (err, result) => {
           if (!err && result && result.xml) {
             const message = result.xml;
             console.log("message:", message);
@@ -102,37 +104,31 @@ const app = https.createServer(options, (req, res) => {
         });
       });
     } else if (parsedUrl.pathname === "/webhook") {
-      handlePostData(req, (error, postData) => {
-        if (error) {
-          res.writeHead(500, { "Content-Type": "text/plain" });
-          res.end("Internal Server Error");
-        }
-        const payload = JSON.stringify(postData);
-        console.log("payload：", payload);
-        if (!payload) return;
-        const headers = req.headers;
+      const payload = JSON.stringify(req.body);
+      console.log("payload：", payload);
+      if (!payload) return;
+      const headers = req.headers;
 
-        // 验证Webhook请求的签名
-        const hmac = crypto.createHmac("sha1", gitSecret);
-        console.log("hmac:", hmac);
+      // 验证Webhook请求的签名
+      const hmac = crypto.createHmac("sha1", gitSecret);
+      console.log("hmac:", hmac);
 
-        hmac.update(payload);
-        const computedSignature = `sha1=${hmac.digest("hex")}`;
-        const expectedSignature = headers["x-hub-signature"];
+      hmac.update(payload);
+      const computedSignature = `sha1=${hmac.digest("hex")}`;
+      const expectedSignature = headers["x-hub-signature"];
 
-        console.log(88, computedSignature, expectedSignature);
-        if (computedSignature !== expectedSignature) {
-          console.log("webhook验证失败");
-          res.status(401).send("Unauthorized");
-          return;
-        }
+      console.log(88, computedSignature, expectedSignature);
+      if (computedSignature !== expectedSignature) {
+        console.log("webhook验证失败");
+        res.status(401).send("Unauthorized");
+        return;
+      }
 
-        // 在这里处理提交事件
-        const commitInfo = req.body;
-        console.log("Received commit:", commitInfo);
+      // 在这里处理提交事件
+      const commitInfo = req.body;
+      console.log("Received commit:", commitInfo);
 
-        res.status(200).send("Webhook received");
-      });
+      res.status(200).send("Webhook received");
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
@@ -158,22 +154,4 @@ function buildXMLReply(replyMessage) {
       <Content><![CDATA[${replyMessage.Content}]]></Content>
     </xml>
   `;
-}
-
-// 处理 POST 请求数据
-function handlePostData(req, callback) {
-  let data = "";
-
-  req.on("data", (chunk) => {
-    data += chunk;
-  });
-
-  req.on("end", () => {
-    console.log("postData:", data);
-    callback(null, data);
-  });
-
-  req.on("error", (error) => {
-    callback(error, null);
-  });
 }
