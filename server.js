@@ -11,7 +11,6 @@ const xml2js = require("xml2js");
 const crypto = require("crypto");
 const { searchGoods } = require("./pdd/index");
 const { gitSecret } = require("./public");
-const bodyParser = require("body-parser");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
@@ -89,8 +88,6 @@ const app = https.createServer(options, (req, res) => {
             } catch (error) {
               console.log("搜索关键字出错：", error);
             }
-            const goodsMessage = await searchGoods(message);
-            replyMessage.Content = goodsMessage;
 
             const xml = buildXMLReply(replyMessage);
             res.writeHead(200, { "Content-Type": "application/xml" });
