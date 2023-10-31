@@ -19,7 +19,7 @@ const options = {
   cert: fs.readFileSync("./https/1_miemie.online_bundle.crt"),
 };
 
-getVXAccessToken();
+// getVXAccessToken();
 getPDDAccessToken();
 
 const app = https.createServer(options, (req, res) => {

@@ -14,8 +14,9 @@ const requestPDDAccessToken = async () => {
     };
     const response = await axios.post(
       "https://oauth.pinduoduo.com/oauth/token",
-      null,
-      { params: requestData }
+      requestData
+      // null,
+      // { params: requestData }
     );
     const data = response.data;
     if (data.error) {
@@ -27,7 +28,7 @@ const requestPDDAccessToken = async () => {
       console.log("Expires In:", data.expires_in);
     }
   } catch (error) {
-    console.error("获取pdd Access Token时发生错误:", error);
+    console.error("获取pdd Access Token时发生错误:", error); // AxiosError: Request failed with status code 405
     throw error;
   }
 };
