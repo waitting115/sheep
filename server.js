@@ -116,7 +116,6 @@ const app = https.createServer(options, (req, res) => {
         // 计算生成的签名
         const computedSignature = `sha256=${hmac.digest("hex")}`;
 
-        console.log("匹配结果：", signature, computedSignature);
         // 检查签名是否匹配
         if (signature === computedSignature) {
           // 签名验证成功
