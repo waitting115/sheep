@@ -12,6 +12,7 @@ const { VxMessage } = require("./vx/VxMessage");
 const { VxCheck } = require("./vx/VxCheck");
 const { gitUpdate } = require("./git/index");
 const { getVXAccessToken } = require("./vx/AccessToken");
+const { getPDDAccessToken } = require("./pdd/AccessToken");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
@@ -19,6 +20,7 @@ const options = {
 };
 
 getVXAccessToken();
+getPDDAccessToken();
 
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
