@@ -6,16 +6,26 @@ let pddLastTime = "";
 
 const requestPDDAccessToken = async () => {
   try {
+    // 请求参数
+    const requestData = {
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "client_credentials", // 使用 Client Credentials 授权模式
+    };
     const response = await axios.post(
-      "https://open-api.pinduoduo.com/oauth/token",
-      {
-        client_id: clientId,
-        client_secret: clientSecret,
-        grant_type: "authorization_code",
-      }
+      "https://oauth.pinduoduo.com/oauth/token",
+      null,
+      { params: requestData }
     );
-    pdd_acccess_token = response.data.access_token;
-    console.log("pdd Access Token:", pdd_acccess_token);
+    const data = response.data;
+    if (data.error) {
+      console.error("Error:", data.error_description);
+    } else {
+      pdd_acccess_token = data.access_token;
+
+      console.log("Pdd Access Token:", data.access_token);
+      console.log("Expires In:", data.expires_in);
+    }
   } catch (error) {
     console.error("获取pdd Access Token时发生错误:", error);
     throw error;
