@@ -4,8 +4,6 @@ const { clientId, clientSecret } = require("../public");
 let pdd_acccess_token = "";
 let pddLastTime = "";
 
-axios.defaults.headers.post["Content-Type"] = "application/json";
-
 const requestPDDAccessToken = async () => {
   try {
     // 请求参数

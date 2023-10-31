@@ -2,25 +2,41 @@ const axios = require("axios");
 const { clientId, clientSecret } = require("../public");
 const { getVXAccessToken, getPDDAccessToken } = require("../vx/AccessToken");
 
+// 工作流程：
+// init：获取AccessToken
+// 拿到用户的搜索关键字后，调用pdd商品搜索接口获取一个或多个商品
+// 创建一个推广位
+// 将商品和推广位绑定并生成推广链接
+// 将推广链接和商品信息返回给用户
+
 // 生成多多客推广位
 async function generatePid() {
   const pdd_acccess_token = await getPDDAccessToken();
-  const data = {
-    type: "pdd.ddk.oauth.goods.pid.generate",
-    number: 1, // 生成推广位数量，可以根据需求修改
+  const requestData = {
+    type: "pdd.ddk.goods.pid.generate", // 接口名称
+    client_id: clientId,
+    client_secret: clientSecret,
+    access_token: accessToken,
+    number: 1, // 创建一个推广位
   };
 
   try {
     const response = await axios.post(
-      "https://open-api.pinduoduo.com/pop/doc/index",
-      data,
+      "https://gw-api.pinduoduo.com/api/router",
+      null,
       {
-        headers: { Authorization: `Bearer ${pdd_acccess_token}` },
+        params: requestData,
       }
     );
 
-    const pidList = response.data.pid_list; // 获取生成的PID列表
-    console.log("Generated PIDs:", pidList);
+    const data = response.data;
+    if (data.error_response) {
+      console.error("Error:", data.error_response);
+    } else {
+      const promotionSite = data.ddk_goods_pid_generate_response.p_id_list[0];
+
+      console.log("Promotion Site:", promotionSite);
+    }
   } catch (error) {
     console.error("Error generating PIDs:", error);
   }
