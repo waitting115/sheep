@@ -125,13 +125,13 @@ const app = https.createServer(options, (req, res) => {
           // 在这里执行你的Webhook处理逻辑，例如，可以执行代码拉取、部署、通知等操作
 
           // 执行Shell脚本 (这是在docker中执行的，会出错：git pull没有权限、docker: not found)
-          // exec("sh update.sh", (error, stdout, stderr) => {
-          //   if (error) {
-          //     console.error(`Error executing script: ${error}`);
-          //   } else {
-          //     console.log(`Script output: ${stdout}`);
-          //   }
-          // });
+          exec("sh /home/sheep/update.sh", (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error executing script: ${error}`);
+            } else {
+              console.log(`Script output: ${stdout}`);
+            }
+          });
 
           res.writeHead(200, { "Content-Type": "text/plain" });
           res.end("Webhook received");
