@@ -28,13 +28,13 @@ function gitUpdate() {
       // 在这里执行你的Webhook处理逻辑，例如，可以执行代码拉取、部署、通知等操作
 
       // 执行Shell脚本 (这是在docker中执行的，会出错没有git访问权限，因为是在docker内部sh运行的，所以需要sh执行环境为服务器)
-      exec("sh /home/sheep/update.sh", (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error executing script: ${error}`);
-        } else {
-          console.log(`Script output: ${stdout}`);
-        }
-      });
+      // exec("sh /home/sheep/update.sh", (error, stdout, stderr) => {
+      //   if (error) {
+      //     console.error(`Error executing script: ${error}`);
+      //   } else {
+      //     console.log(`Script output: ${stdout}`);
+      //   }
+      // });
 
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end("Webhook received");
