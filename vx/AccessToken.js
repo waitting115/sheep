@@ -18,7 +18,7 @@ const requestVXAccessToken = async () => {
     );
 
     vx_access_token = response.data.access_token;
-    console.log("Access Token:", accessToken);
+    console.log("Access Token:", vx_access_token);
   } catch (error) {
     console.error("获取Access Token时发生错误:", error);
   }
