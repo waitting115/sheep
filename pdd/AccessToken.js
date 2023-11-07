@@ -6,6 +6,7 @@ const { getVXAccessToken } = require("../vx/AccessToken");
 let pdd_acccess_token = "";
 let pddLastTime = "";
 
+// 思路：不一定要先获取token，先走流程，看哪里需要再去琢磨获取
 const requestPDDAccessToken = async () => {
   try {
     const vxToken = await getVXAccessToken();

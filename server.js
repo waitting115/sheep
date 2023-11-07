@@ -20,14 +20,14 @@ const options = {
 };
 
 // getVXAccessToken();
-getPDDAccessToken();
+// getPDDAccessToken();
 
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   console.log("parsedUrl", parsedUrl);
   if (req.method === "GET") {
     if (parsedUrl.pathname === "/") {
-      VxCheck();
+      VxCheck(parsedUrl);
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
