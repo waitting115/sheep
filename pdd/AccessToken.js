@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { clientId, clientSecret } = require("../public");
+const crypto = require("crypto");
 
 let pdd_acccess_token = "";
 let pddLastTime = "";
@@ -7,13 +8,43 @@ let pddLastTime = "";
 const requestPDDAccessToken = async () => {
   try {
     // 请求参数
-    const requestData = {
+    const params = {
+      type: "pdd.pop.auth.token.create",
       client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: "client_credentials", // 使用 Client Credentials 授权模式
+      // client_secret: clientSecret,
+      timestamp: Math.floor(Date.now() / 1000).toString(),
+      sign: "",
+      // grant_type: "client_credentials", // 使用 Client Credentials 授权模式
     };
+
+    // 按参数名进行首字母升序排列
+    const sortedParams = {};
+    Object.keys(params)
+      .sort()
+      .forEach((key) => {
+        sortedParams[key] = params[key];
+      });
+
+    // 将参数和值拼接成字符串
+    const paramString = Object.entries(sortedParams)
+      .map(([key, value]) => `${key}${value}`)
+      .join("");
+
+    // 添加应用的 client_secret
+    const stringWithSecret = `${clientSecret}${paramString}${clientSecret}`;
+
+    // 计算 MD5 哈希
+    const sign = crypto
+      .createHash("md5")
+      .update(stringWithSecret)
+      .digest("hex")
+      .toUpperCase();
+
+    console.log("生成的签名值:", sign);
+    params.sign = sign;
+
     const response = await axios.post(
-      "https://oauth.pinduoduo.com/oauth/token",
+      "https://gw-api.pinduoduo.com/api/router",
       requestData
     );
     const data = response.data;
