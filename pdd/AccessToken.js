@@ -45,7 +45,7 @@ const requestPDDAccessToken = async () => {
 
     const response = await axios.post(
       "https://gw-api.pinduoduo.com/api/router",
-      requestData
+      params
     );
     const data = response.data;
     if (data.error) {
