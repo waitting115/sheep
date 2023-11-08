@@ -1,4 +1,4 @@
-const { handlePostData, buildXMLReply } = require("../tools");
+const { handlePostData, buildXMLReply, normalReq } = require("../tools");
 const { searchGoods } = require("../pdd/index");
 const xml2js = require("xml2js");
 

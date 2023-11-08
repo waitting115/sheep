@@ -1,6 +1,6 @@
 const sha1 = require("sha1");
 
-function VxCheck(parsedUrl) {
+function VxCheck(res, parsedUrl) {
   // 微信服务器验证 微信时不时的就会验证一下
   const token = "TOKEN";
   const { signature, timestamp, nonce, echostr } = parsedUrl.query;

@@ -13,6 +13,7 @@ const { VxCheck } = require("./vx/VxCheck");
 const { gitUpdate } = require("./git/index");
 const { getVXAccessToken } = require("./vx/AccessToken");
 const { getPDDAccessToken } = require("./pdd/AccessToken");
+const { generatePid } = require("./pdd/index");
 
 const options = {
   key: fs.readFileSync("./https/2_miemie.online.key"),
@@ -21,13 +22,13 @@ const options = {
 
 // getVXAccessToken();
 // getPDDAccessToken();
-
+generatePid();
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   console.log("parsedUrl", parsedUrl);
   if (req.method === "GET") {
     if (parsedUrl.pathname === "/") {
-      VxCheck(parsedUrl);
+      VxCheck(res, parsedUrls);
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
