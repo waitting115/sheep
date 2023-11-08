@@ -35,9 +35,9 @@ const app = https.createServer(options, (req, res) => {
     }
   } else if (req.method === "POST") {
     if (parsedUrl.pathname === "/") {
-      VxMessage();
+      VxMessage(req, res);
     } else if (parsedUrl.pathname === "/webhook") {
-      gitUpdate(req);
+      gitUpdate(req, res);
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });

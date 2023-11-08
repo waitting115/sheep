@@ -2,7 +2,7 @@ const { handlePostData, buildXMLReply } = require("../tools");
 const { searchGoods } = require("../pdd/index");
 const xml2js = require("xml2js");
 
-function VxMessage() {
+function VxMessage(req, res) {
   // 消息请求为post，且每次都传过来如下参数：?signature=509549c13e8dbeb4&timestamp=1698069683&nonce=1978155440&openid=oyGGG5o9LuNFWeGAz18jVmbI7XZg
   handlePostData(req, (error, postData) => {
     if (error) {

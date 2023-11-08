@@ -3,7 +3,7 @@ const { gitSecret } = require("../public");
 const crypto = require("crypto");
 const { exec } = require("child_process");
 
-function gitUpdate(req) {
+function gitUpdate(req, res) {
   handlePostData(req, (error, payload) => {
     if (error) {
       res.writeHead(500, { "Content-Type": "text/plain" });
