@@ -65,7 +65,7 @@ const searchGoods = async (title) => {
     // 在这里处理搜索到的商品信息并回复给用户
     // ...
   } catch (error) {
-    console.error("搜索商品时发生错误:", error);
+    console.error("搜索商品时发生错误:");
     // 回复用户搜索出错的消息
     // ...
   }
