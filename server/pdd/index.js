@@ -3,6 +3,9 @@ const { clientId, clientSecret } = require("../public");
 const { getVXAccessToken, getPDDAccessToken } = require("../vx/AccessToken");
 const crypto = require("crypto");
 
+// 依然是需要H5或小程序做载体
+// 流程
+
 const getFetch = async (option) => {
   const params = {
     type: option.type,

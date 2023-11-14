@@ -22,7 +22,7 @@ const options = {
 
 // getVXAccessToken();
 // getPDDAccessToken();
-generatePid();
+// generatePid();
 const app = https.createServer(options, (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   console.log("parsedUrl", parsedUrl);
