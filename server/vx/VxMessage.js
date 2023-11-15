@@ -1,5 +1,6 @@
-const { handlePostData, buildXMLReply, normalReq } = require("../tools");
-const { searchGoods } = require("../pdd/index");
+const normalReq = require('./utils/normalReq');
+const handlePostData = require('./utils/handlePostData');
+const buildXMLReply = require('./utils/buildXMLReply');
 const xml2js = require("xml2js");
 
 function VxMessage(req, res) {
@@ -29,8 +30,9 @@ function VxMessage(req, res) {
 
         // 在这里编写处理用户消息的代码
         try {
-          const goodsMessage = await searchGoods(message);
-          replyMessage.Content = goodsMessage;
+          // 需要将所有服务运行起来后，axios调用pdd的接口了
+          // const goodsMessage = await searchGoods(message);
+          // replyMessage.Content = goodsMessage;
         } catch (error) {
           console.log("搜索关键字出错：", error);
         }

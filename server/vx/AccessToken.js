@@ -1,8 +1,8 @@
 const axios = require("axios");
-const { appId, appSecret } = require("../public");
+const appId = "wx26f9ebb812c9ad7f"; // vx
+const appSecret = "032b9f27c6dd711fda6efaea27378ac4"; // vx
 
-let vx_access_token = ""; // 2h有效期 需定时刷新
-let vxLastTime = "";
+let vx_access_token = "";
 
 const requestVXAccessToken = async () => {
   try {
@@ -16,25 +16,19 @@ const requestVXAccessToken = async () => {
         },
       }
     );
-
     vx_access_token = response.data.access_token;
+    // 存到数据库
     console.log("vx Access Token:", vx_access_token);
   } catch (error) {
     console.error("获取Access Token时发生错误:", error);
   }
 };
 
-const getVXAccessToken = async () => {
-  if (
-    vxLastTime === "" ||
-    new Date().getTime() - vxLastTime >= 2 * 60 * 60 * 1000
-  ) {
-    await requestVXAccessToken();
-    vxLastTime = new Date().getTime();
-  }
-  return vx_access_token;
+const initVXAccessToken = async () => {
+  requestVXAccessToken();
+  setInterval(() => {
+    requestVXAccessToken();
+  }, 2 * 60 * 60 * 1000);
 };
 
-module.exports = {
-  getVXAccessToken,
-};
+module.exports = initVXAccessToken;

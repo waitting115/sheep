@@ -1,7 +1,8 @@
-const { handlePostData } = require("../tools");
-const { gitSecret } = require("../public");
+const { handlePostData } = require("./handlePostData");
 const crypto = require("crypto");
-const { exec } = require("child_process");
+// const { exec } = require("child_process");
+
+const gitSecret = "991209"; // Git仓库提供的Webhook秘密令牌
 
 function gitUpdate(req, res) {
   handlePostData(req, (error, payload) => {
@@ -47,6 +48,4 @@ function gitUpdate(req, res) {
   });
 }
 
-module.exports = {
-  gitUpdate,
-};
+module.exports = gitUpdate
