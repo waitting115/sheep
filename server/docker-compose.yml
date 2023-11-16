@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  vx:
+    container_name: vx_container
+    build:
+      context: ./vx
+      dockerfile: Dockerfile
+    ports:
+      - "7000:7000"
+    volumes:
+      - /home/sheep/server/vx:/app
+    working_dir: /app
+    environment:
+      NODE_ENV: production
+  git:
+    container_name: git_container
+    build:
+      context: ./git
+      dockerfile: Dockerfile
+    ports:
+      - "7001:7001"
+    volumes:
+      - /home/sheep/server/git:/app
+    working_dir: /app
+    environment:
+      NODE_ENV: production
+  pdd:
+    container_name: pdd_container
+    build:
+      context: ./pdd
+      dockerfile: Dockerfile
+    ports:
+      - "7002:7002"
+    volumes:
+      - /home/sheep/server/pdd:/app
+    working_dir: /app
+    environment:
+      NODE_ENV: production
