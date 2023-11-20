@@ -2,7 +2,7 @@ const generatePid = require('./generatePid');
 const axios = require('axios');
 
 const searchGoods = async (title) => {
-    const pid = await generatePid();
+    // const pid = await generatePid();
     // 使用商品标题进行拼多多搜索
     try {
       // const wechatAccessToken = await getVXAccessToken();
@@ -32,4 +32,6 @@ const searchGoods = async (title) => {
     return "result";
   };
 
-module.exports = searchGoods;
+module.exports = {
+  searchGoods
+};

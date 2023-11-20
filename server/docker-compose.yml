@@ -25,15 +25,27 @@ services:
     working_dir: /app
     environment:
       NODE_ENV: production
-  pdd:
-    container_name: pdd_container
+  commodity:
+    container_name: commodity_container
     build:
-      context: ./pdd
+      context: ./commodity
       dockerfile: Dockerfile
     ports:
       - "7002:7002"
     volumes:
-      - /home/sheep/server/pdd:/app
+      - /home/sheep/server/commodity:/app
+    working_dir: /app
+    environment:
+      NODE_ENV: production
+  user:
+    container_name: user_container
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    ports:
+      - "7003:7003"
+    volumes:
+      - /home/sheep/server/user:/app
     working_dir: /app
     environment:
       NODE_ENV: production

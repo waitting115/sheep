@@ -22,7 +22,7 @@ const app = https.createServer({}, (req, res) => {
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
-      res.end(normalReq); // 无论如何都要回复微信
+      res.end(normalReq);
     }
   } else if (req.method === "POST") {
     if (parsedUrl.pathname === "/vx") {
@@ -30,7 +30,7 @@ const app = https.createServer({}, (req, res) => {
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
-      res.end(normalReq); // 无论如何都要回复微信
+      res.end(normalReq);
     }
   } else {
     console.log("未知的请求方法：", req.method);
