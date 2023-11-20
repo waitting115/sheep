@@ -1,12 +1,12 @@
-const http = require('http');
+const http = require("http");
 const url = require("url");
 const { addRemind, removeRemind } = require("./utils/remind");
 const { versionStandard, versionAll } = require("./utils/version");
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log('parsedUrl', parsedUrl);
-  res.send('success');
+  console.log("parsedUrl", parsedUrl);
+  res.end("success");
 
   // if (req.method === "POST") {
   //   switch (parsedUrl.pathname) {

@@ -27,8 +27,8 @@ const search = async (req, res) => {
       tbSearchGoods(title, type),
     ]).then((result) => {
       console.log("搜索结果", result);
-      // res.send(res);
-      res.send([]);
+      // res.end(res);
+      res.end([]);
       res.end();
     });
   } catch (error) {

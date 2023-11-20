@@ -27,8 +27,8 @@ const remindList = async (req, res) => {
     //   发起请求
     Promise.all(proList).then((result) => {
       console.log("搜索结果", result);
-      // res.send(res);
-      res.send([]);
+      // res.end(res);
+      res.end([]);
       res.end();
     });
   } catch (error) {

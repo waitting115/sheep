@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require("http");
 const url = require("url");
 
 const normalReq = require("./utils/normalReq");
@@ -10,8 +10,9 @@ initVXAccessToken();
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log('parsedUrl', parsedUrl);
-  res.send('success');
+  console.log("parsedUrl", parsedUrl);
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("success");
 
   // if (req.method === "GET") {
   //   if (parsedUrl.pathname === "/vx") {

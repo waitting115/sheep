@@ -1,7 +1,7 @@
-const http = require('http');
+const http = require("http");
 const WebSocket = require("ws"); // pnpm install
 const url = require("url");
-const ranking = require('./ws/ranking')
+const ranking = require("./ws/ranking");
 
 const coupon = require("./router/coupon");
 const detail = require("./router/detail");
@@ -12,8 +12,8 @@ const search = require("./router/search");
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log('parsedUrl', parsedUrl);
-  res.send('success');
+  console.log("parsedUrl", parsedUrl);
+  res.end("success");
   // if (req.method === "GET") {
   //   switch (parsedUrl.pathname) {
   //     case "/commodity/search":
