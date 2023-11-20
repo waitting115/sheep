@@ -1,9 +1,4 @@
-let https;
-try {
-  https = require("node:https");
-} catch (err) {
-  console.error("https support is disabled!");
-}
+const http = require('http');
 const url = require("url");
 
 const normalReq = require("./utils/normalReq");
@@ -13,28 +8,30 @@ const initVXAccessToken = require("./AccessToken");
 
 initVXAccessToken();
 
-const app = https.createServer({}, (req, res) => {
+const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log("parsedUrl", parsedUrl);
-  if (req.method === "GET") {
-    if (parsedUrl.pathname === "/vx") {
-      VxCheck(res, parsedUrls);
-    } else {
-      console.log(`未知的url：${req.url}`);
-      res.writeHead(200, { "Content-Type": "application/xml" });
-      res.end(normalReq);
-    }
-  } else if (req.method === "POST") {
-    if (parsedUrl.pathname === "/vx") {
-      VxMessage(req, res);
-    } else {
-      console.log(`未知的url：${req.url}`);
-      res.writeHead(200, { "Content-Type": "application/xml" });
-      res.end(normalReq);
-    }
-  } else {
-    console.log("未知的请求方法：", req.method);
-  }
+  console.log('parsedUrl', parsedUrl);
+  res.send('success');
+
+  // if (req.method === "GET") {
+  //   if (parsedUrl.pathname === "/vx") {
+  //     VxCheck(res, parsedUrls);
+  //   } else {
+  //     console.log(`未知的url：${req.url}`);
+  //     res.writeHead(200, { "Content-Type": "application/xml" });
+  //     res.end(normalReq);
+  //   }
+  // } else if (req.method === "POST") {
+  //   if (parsedUrl.pathname === "/vx") {
+  //     VxMessage(req, res);
+  //   } else {
+  //     console.log(`未知的url：${req.url}`);
+  //     res.writeHead(200, { "Content-Type": "application/xml" });
+  //     res.end(normalReq);
+  //   }
+  // } else {
+  //   console.log("未知的请求方法：", req.method);
+  // }
 });
 
 app.listen(7000, () => {

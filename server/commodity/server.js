@@ -1,9 +1,4 @@
-let https;
-try {
-  https = require("node:https");
-} catch (err) {
-  console.error("https support is disabled!");
-}
+const http = require('http');
 const WebSocket = require("ws"); // pnpm install
 const url = require("url");
 const ranking = require('./ws/ranking')
@@ -15,35 +10,37 @@ const recommend = require("./router/recommend");
 const remindList = require("./router/remindList");
 const search = require("./router/search");
 
-const app = https.createServer({}, (req, res) => {
+const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  if (req.method === "GET") {
-    switch (parsedUrl.pathname) {
-      case "/commodity/search":
-        search(req, res);
-        break;
-      case "/commodity/coupon":
-        coupon(req, res);
-        break;
-      case "/commodity/recommend":
-        recommend(req, res);
-        break;
-      case "/commodity/detail": // /commodity/detail/{id}
-        detail(req, res);
-        break;
-      case "/commodity/remindList":
-        remindList(req, res);
-        break;
-      default:
-        console.log("未知的请求路径：", parsedUrl.pathname);
-    }
-  } else if (req.method === "POST") {
-    if (parsedUrl.pathname === "/commodity/") {
-    } else {
-    }
-  } else {
-    console.log("未知的请求方法：", req.method);
-  }
+  console.log('parsedUrl', parsedUrl);
+  res.send('success');
+  // if (req.method === "GET") {
+  //   switch (parsedUrl.pathname) {
+  //     case "/commodity/search":
+  //       search(req, res);
+  //       break;
+  //     case "/commodity/coupon":
+  //       coupon(req, res);
+  //       break;
+  //     case "/commodity/recommend":
+  //       recommend(req, res);
+  //       break;
+  //     case "/commodity/detail": // /commodity/detail/{id}
+  //       detail(req, res);
+  //       break;
+  //     case "/commodity/remindList":
+  //       remindList(req, res);
+  //       break;
+  //     default:
+  //       console.log("未知的请求路径：", parsedUrl.pathname);
+  //   }
+  // } else if (req.method === "POST") {
+  //   if (parsedUrl.pathname === "/commodity/") {
+  //   } else {
+  //   }
+  // } else {
+  //   console.log("未知的请求方法：", req.method);
+  // }
 });
 
 // 创建 WebSocket 服务器
