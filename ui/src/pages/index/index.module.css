@@ -1,0 +1,17 @@
+.rankingList {
+}
+
+.rankingItem {
+  margin-bottom: 10px;
+}
+
+.rankingItemFirst {
+  width: 50%;
+  height: 100%;
+}
+
+.rankingItemSecond,
+.rankingItemThird {
+    width: 50%;
+    height: 50%;
+}

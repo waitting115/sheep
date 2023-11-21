@@ -4,6 +4,7 @@ export default defineAppConfig({
     "pages/wool/index",
     "pages/priceReduction/index",
     "pages/wool/index",
+    "pages/search/index",
   ],
   window: {
     backgroundTextStyle: "light",
