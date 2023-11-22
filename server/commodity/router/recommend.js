@@ -12,19 +12,22 @@ const recommend = async (req, res) => {
   // - 返回多个列表
   try {
     // 示例查询
-    const queryString = "SELECT * FROM user_table WHERE openid = 100 LIMIT 1;";
-    const type = await sql(queryString).type;
+    // const queryString = "SELECT * FROM user_table WHERE openid = 100 LIMIT 1;";
+    // const type = await sql(queryString).type;
 
+    const type = true;
     //   发起请求
     Promise.all([
       pddGetRecommend(type),
-      jdGetRecommend(type),
-      tbGetRecommend(type),
+      // jdGetRecommend(type),
+      // tbGetRecommend(type),
     ]).then((result) => {
-      console.log("搜索结果", result);
-      // res.end(res);
-      res.end([]);
-      res.end();
+      const data = {
+        pdd: result[0],
+        jd: result[1],
+        tb: result[2],
+      };
+      res.end(JSON.stringify(data));
     });
   } catch (error) {
     console.log("err", error);

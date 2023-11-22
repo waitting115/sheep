@@ -1,6 +1,5 @@
 // 获取详情：get commodity/detail/{id}（标注是否已添加提醒）
 const sql = require("../utils/sql");
-getDetail;
 const { getDetail: pddGetDetail } = require("../modules/pdd/getDetail");
 const { getDetail: jdGetDetail } = require("../modules/jd/getDetail");
 const { getDetail: tbGetDetail } = require("../modules/tb/getDetail");

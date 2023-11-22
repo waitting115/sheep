@@ -11,61 +11,75 @@ const remindList = require("./router/remindList");
 const search = require("./router/search");
 
 const app = http.createServer((req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  // 设置 CORS 头部
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
   const parsedUrl = url.parse(req.url, true);
-  console.log("parsedUrl", parsedUrl);
-  res.end("success");
-  // if (req.method === "GET") {
-  //   switch (parsedUrl.pathname) {
-  //     case "/commodity/search":
-  //       search(req, res);
-  //       break;
-  //     case "/commodity/coupon":
-  //       coupon(req, res);
-  //       break;
-  //     case "/commodity/recommend":
-  //       recommend(req, res);
-  //       break;
-  //     case "/commodity/detail": // /commodity/detail/{id}
-  //       detail(req, res);
-  //       break;
-  //     case "/commodity/remindList":
-  //       remindList(req, res);
-  //       break;
-  //     default:
-  //       console.log("未知的请求路径：", parsedUrl.pathname);
-  //   }
-  // } else if (req.method === "POST") {
-  //   if (parsedUrl.pathname === "/commodity/") {
-  //   } else {
-  //   }
-  // } else {
-  //   console.log("未知的请求方法：", req.method);
-  // }
-});
-
-// 创建 WebSocket 服务器
-const wss = new WebSocket.Server({ app });
-
-// WebSocket 服务器监听连接事件
-wss.on("connection", (ws) => {
-  console.log("Client connected");
-  ranking(ws);
-  // 监听消息事件
-  ws.on("message", (message) => {
-    console.log(`Received message: ${message}`);
-
-    // 发送消息给客户端
-    ws.send(`Server received: ${message}`);
-  });
-
-  // 监听关闭事件
-  ws.on("close", () => {
-    console.log("Client disconnected");
-  });
+  console.log("path", parsedUrl.path);
+  if (req.method === "GET") {
+    if (parsedUrl.pathname === "/commodity/search") {
+      search(req, res);
+    } else if (parsedUrl.pathname === "/commodity/coupon") {
+      coupon(req, res);
+    } else if (parsedUrl.pathname === "/commodity/recommend") {
+      recommend(req, res);
+      // } else if (/^\/commodity\/detail\/\d+$/.test(parsedUrl.pathname)) {
+    } else if (parsedUrl.pathname === "/commodity/detail") {
+      detail(req, res);
+    } else if (parsedUrl.pathname === "/commodity/remindList") {
+      remindList(req, res);
+    } else {
+      console.log("未知的请求路径：", parsedUrl.pathname);
+    }
+  } else if (req.method === "POST") {
+    if (parsedUrl.pathname === "/commodity/") {
+    } else {
+    }
+  } else {
+    console.log("未知的请求方法：", req.method);
+  }
 });
 
 app.listen(7002, () => {
   console.log("node-commodity服务在localhost:7002端口启动!");
+});
+
+// 创建 WebSocket 服务器
+const wss = new WebSocket.Server({ noServer: true });
+
+// 将 WebSocket 服务器附加到 HTTP 服务器
+app.on("upgrade", (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit("connection", ws, request);
+  });
+});
+
+// WebSocket 服务器监听连接事件
+wss.on("connection", (ws) => {
+  console.log("客户端已连接");
+  // 处理 WebSocket 连接
+  // ...
+
+  // 监听消息事件
+  ws.on("message", (message) => {
+    console.log(`接收到消息：${message}`);
+
+    // 发送消息给客户端
+    ws.send(`服务器收到：${message}`);
+  });
+
+  // 监听关闭事件
+  ws.on("close", () => {
+    console.log("客户端断开连接");
+  });
+});
+
+wss.on("error", (error) => {
+  console.error(`WebSocket 服务器错误：${error}`);
 });
 
 {

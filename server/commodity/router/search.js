@@ -13,23 +13,26 @@ const search = async (req, res) => {
 
   // 解析请求的 URL, 获取查询参数对象
   const { title } = url.parse(req.url, true).query;
-  console.log("title", title);
 
   try {
     // 示例查询
-    const queryString = "SELECT * FROM user_table WHERE openid = 100 LIMIT 1;";
-    const type = await sql(queryString).type;
+    // const queryString = "SELECT * FROM user_table WHERE openid = 100 LIMIT 1;";
+    // const type = await sql(queryString).type;
 
     //   发起请求
     Promise.all([
-      pddSearchGoods(title, type),
-      jdSearchGoods(title, type),
-      tbSearchGoods(title, type),
+      pddSearchGoods(title),
+      // jdSearchGoods(title),
+      // tbSearchGoods(title),
     ]).then((result) => {
       console.log("搜索结果", result);
+      const data = {
+        pdd: result[0],
+        jd: result[1],
+        tb: result[2],
+      };
       // res.end(res);
-      res.end([]);
-      res.end();
+      res.end(JSON.stringify(data));
     });
   } catch (error) {
     console.log("err", error);

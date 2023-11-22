@@ -19,17 +19,14 @@ const getFetch = async (option) => {
     .forEach((key) => {
       sortedParams[key] = params[key];
     });
-  console.log("sortedParams", sortedParams);
   // 将参数和值拼接成字符串
   const paramString = Object.entries(sortedParams)
     .map(([key, value]) => `${key}${value}`)
     .join("");
-  console.log("paramString", paramString);
 
   // 添加应用的 client_secret
   const stringWithSecret = `${clientSecret}${paramString}${clientSecret}`;
 
-  console.log("stringWithSecret", stringWithSecret);
   // 计算 MD5 哈希
   const sign = crypto
     .createHash("md5")
@@ -37,7 +34,6 @@ const getFetch = async (option) => {
     .digest("hex")
     .toUpperCase();
 
-  console.log("生成的签名值:", sign);
   params.sign = sign;
 
   const response = await axios.post(

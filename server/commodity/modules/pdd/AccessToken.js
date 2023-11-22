@@ -1,5 +1,4 @@
 const axios = require("axios");
-const { clientId, clientSecret } = require("../public");
 const crypto = require("crypto");
 // const { getVXAccessToken } = require("../vx/AccessToken");
 

@@ -6,7 +6,7 @@ const { VxMessage } = require("./VxMessage");
 const { VxCheck } = require("./VxCheck");
 const initVXAccessToken = require("./AccessToken");
 
-initVXAccessToken();
+// initVXAccessToken();
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
