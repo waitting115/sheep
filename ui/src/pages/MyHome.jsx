@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchBar, Tabs } from "@nutui/nutui-react";
 import "@nutui/nutui-biz/dist/styles/demo.css";
 import ActiveSwiper from "../parts/MyHome/ActiveSwiper";
 import Charts from "../parts/MyHome/Charts";
 import Feed from "../parts/MyHome/Feed";
+import request from '@/utils/request';
 
 const panelList = [
   {
@@ -19,12 +20,17 @@ const panelList = [
     name: "淘宝",
   },
 ];
+
 function MyHome() {
   const [tab1value, setTab1value] = useState("0");
 
+useEffect(() => {
+
+}, [])
+
   return (
     <>
-      <SearchBar placeholder="上京东，购好物" />
+      <SearchBar placeholder="111" />
       <ActiveSwiper />
       <Charts />
       <Tabs

@@ -10,29 +10,27 @@ const initVXAccessToken = require("./AccessToken");
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log("parsedUrl", parsedUrl);
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("success");
+  console.log("path", parsedUrl.path);
 
-  // if (req.method === "GET") {
-  //   if (parsedUrl.pathname === "/vx") {
-  //     VxCheck(res, parsedUrls);
-  //   } else {
-  //     console.log(`未知的url：${req.url}`);
-  //     res.writeHead(200, { "Content-Type": "application/xml" });
-  //     res.end(normalReq);
-  //   }
-  // } else if (req.method === "POST") {
-  //   if (parsedUrl.pathname === "/vx") {
-  //     VxMessage(req, res);
-  //   } else {
-  //     console.log(`未知的url：${req.url}`);
-  //     res.writeHead(200, { "Content-Type": "application/xml" });
-  //     res.end(normalReq);
-  //   }
-  // } else {
-  //   console.log("未知的请求方法：", req.method);
-  // }
+  if (req.method === "GET") {
+    if (parsedUrl.pathname === "/vx") {
+      VxCheck(parsedUrls, res);
+    } else {
+      console.log(`未知的url：${req.url}`);
+      res.writeHead(200, { "Content-Type": "application/xml" });
+      res.end(normalReq);
+    }
+  } else if (req.method === "POST") {
+    if (parsedUrl.pathname === "/vx") {
+      VxMessage(req, res);
+    } else {
+      console.log(`未知的url：${req.url}`);
+      res.writeHead(200, { "Content-Type": "application/xml" });
+      res.end(normalReq);
+    }
+  } else {
+    console.log("未知的请求方法：", req.method);
+  }
 });
 
 app.listen(7000, () => {

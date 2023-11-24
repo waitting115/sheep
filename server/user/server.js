@@ -5,7 +5,7 @@ const { versionStandard, versionAll } = require("./utils/version");
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log("parsedUrl", parsedUrl);
+  console.log("path", parsedUrl.path);
   res.end("success");
 
   // if (req.method === "POST") {

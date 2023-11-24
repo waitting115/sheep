@@ -5,13 +5,12 @@ const gitUpdate = require("./utils/gitUpdate");
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log("parsedUrl", parsedUrl);
-  res.end("success");
-  // if (req.method === "POST" && parsedUrl.pathname === "/webhook") {
-  //   gitUpdate(req, res);
-  // } else {
-  //   console.log("未知的请求方法：", req.method);
-  // }
+  console.log("path", parsedUrl.path);
+  if (req.method === "POST" && parsedUrl.pathname === "/webhook") {
+    gitUpdate(req, res);
+  } else {
+    console.log("未知的请求方法：", req.method);
+  }
 });
 
 app.listen(7001, () => {
