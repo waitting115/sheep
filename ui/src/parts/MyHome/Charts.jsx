@@ -1,9 +1,15 @@
+import { useMemo } from "react";
 import { Image, Cell, Price } from "@nutui/nutui-react";
-import { HorizontalScrolling } from "@nutui/nutui-biz";
+import { HorizontalScrolling, Coupon } from "@nutui/nutui-biz";
 import { Jimi40 } from "@nutui/icons-react";
+import jd from "@/assets/jd.svg";
+import tb from "@/assets/tb.svg";
+import tm from "@/assets/tm.svg";
+import pdd from "@/assets/pdd.svg";
 
 function Charts() {
   // 数据需要传进来
+
   return (
     <>
       <div className="demo">
@@ -18,14 +24,14 @@ function Charts() {
                 >
                   <Image src="https://img13.360buyimg.com/imagetools/s140x140_jfs/t1/209493/27/20842/369749/6260d2eeE02eb253c/97386232ecf1c1ef.jpg" />
                   <div style={{ display: "flex" }}>
-                    <Jimi40 />
-                    <div>title</div>
+                    {/* <Jimi40 /> */}
+                    {/* <Image src={cp} /> */}
+                    <div>尿不湿</div>
                   </div>
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Price price={15} size="normal" thousands />
-                    <div>券 5元</div>
+                    <Price price={15} size="normal" thousands digits={0} />
                   </div>
                 </div>
               );

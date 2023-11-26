@@ -1,16 +1,15 @@
-import { Price, Row, Col, Tag, Ellipsis, Icon } from "@nutui/nutui-react";
+import { Price, Row, Col, Tag, Ellipsis } from "@nutui/nutui-react";
 import { ProductFeed, Coupon } from "@nutui/nutui-biz";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import getTab from "@/utils/getTab";
 import { useNavigate } from "react-router-dom";
-
+import { Dongdong } from "@nutui/icons-react";
 /**
  * 推荐商品列表组件
  * @param {string} platform  平台id， pdd/jd/tb
  * @returns
  */
 function Feed({ platform }) {
-  console.log("platform", platform);
   const [listDouble, setListDouble] = useState([]);
   const navigate = useNavigate();
 
@@ -30,7 +29,7 @@ function Feed({ platform }) {
 
   const getData = async () => {
     let res = [];
-    switch (id) {
+    switch (platform) {
       case "pdd":
         res = await getPddList();
         break;
@@ -41,7 +40,7 @@ function Feed({ platform }) {
         res = await getTbList();
         break;
       default:
-        console.error("未知的id：", id);
+        console.error("未知的platform：", platform);
     }
 
     setListDouble(
@@ -140,7 +139,7 @@ function Feed({ platform }) {
         </Row>
         <Row>
           <Col span={4}>
-            <Icon name="dongdong" />
+            <Dongdong />
           </Col>
           <Col span={20}>
             <Ellipsis content={item.name} direction="end" rows="2" />

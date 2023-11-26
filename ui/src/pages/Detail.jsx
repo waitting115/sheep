@@ -7,10 +7,8 @@ import PriceTrend from "@/parts/Detail/PriceTrend";
 
 /**
  * 商品详情组件
- * @param {string} platform 商品平台id
- * @param {string | number} goodSign 商品sign
  */
-function Detail({ platform, goodSign }) {
+function Detail() {
   let [searchParams, setSearchParams] = useSearchParams();
   const platform = searchParams.get("platform");
   const goodSign = searchParams.get("goodSign");
