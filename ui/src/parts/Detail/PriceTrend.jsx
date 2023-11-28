@@ -1,5 +1,9 @@
 import { jsx, Canvas, Chart, Line, Axis, Tooltip } from "@antv/f2";
 
+/**
+ * 商品详情页的价格走势图
+ * @param {object} param0 图表数据
+ */
 function PriceTrend({ chartData }) {
   const context = document.getElementById("container").getContext("2d");
   const LineChart = (

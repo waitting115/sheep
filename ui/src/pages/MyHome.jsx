@@ -4,7 +4,7 @@ import "@nutui/nutui-biz/dist/styles/demo.css";
 import ActiveSwiper from "../parts/MyHome/ActiveSwiper";
 import Charts from "../parts/MyHome/Charts";
 import Feed from "../parts/MyHome/Feed";
-import request from '@/utils/request';
+import request from "@/utils/request";
 
 const panelList = [
   {
@@ -21,12 +21,13 @@ const panelList = [
   },
 ];
 
+/**
+ * 首页
+ */
 function MyHome() {
   const [tab1value, setTab1value] = useState("0");
 
-useEffect(() => {
-
-}, [])
+  useEffect(() => {}, []);
 
   return (
     <>

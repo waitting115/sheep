@@ -1,25 +1,15 @@
 import axios from "axios";
-import getToken from "../hooks/getToken";
 
 const request = axios.create({
-  // baseURL: "https://miemie.online/",
-  baseURL: "http://localhost:7002/",
+  baseURL: "https://vx/",
   timeout: 20000,
 });
 
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.token = token;
-      return config;
-    } else {
-      getToken().then(() => {
-        config.headers.token = localStorage.getItem("token");
-        return config;
-      });
-    }
+    //   config.headers.token = sessionStorage.getItem("token");
+    return config; // 返回这个配置对象，如果没有返回，这个请求就不会发送出去
   },
   (error) => {
     return Promise.reject(error);
