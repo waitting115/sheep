@@ -5,7 +5,7 @@ import "./index.css";
 import "@nutui/nutui-react/dist/style.css";
 import "@nutui/nutui-biz/dist/style.css";
 import "@nutui/nutui-biz/dist/styles/demo.css";
-import { getToken } from "./hooks/getToken";
+import getToken from "@/hooks/getToken";
 
 getToken();
 

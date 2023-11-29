@@ -1,9 +1,12 @@
-import { Price, Row, Col, Tag, Ellipsis } from "@nutui/nutui-react";
+import { Price, Row, Col, Tag, Ellipsis, Image } from "@nutui/nutui-react";
 import { ProductFeed, Coupon } from "@nutui/nutui-biz";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import getTab from "@/utils/getTab";
 import { useNavigate } from "react-router-dom";
-import { Dongdong } from "@nutui/icons-react";
+import request from "@/utils/request";
+import couponIcon from "@/assets/coupon-icon.svg";
+import getPlatformLogo from "@/utils/getPlatformLogo";
+
 /**
  * 推荐商品列表组件
  * @param {string} platform  平台id， pdd/jd/tb
@@ -18,9 +21,8 @@ function Feed({ platform }) {
     try {
       const result = await request.get("commodity/recommend");
       res = result.list;
-      console.log("res", res);
     } catch (error) {
-      console.error("error:", error);
+      console.error("接口commodity/recommend error:", error);
     }
     return res;
   };
@@ -42,7 +44,9 @@ function Feed({ platform }) {
       default:
         console.error("未知的platform：", platform);
     }
-
+    res = res ? res : [];
+    res.length = 10;
+    res.fill(1);
     setListDouble(
       res.map((v, i) => ({
         id: i + 1,
@@ -75,104 +79,46 @@ function Feed({ platform }) {
   const refresh = () => {};
 
   const customProductDouble = (item) => {
-    //优惠券样式
-    const couponSmallStyle = useMemo(() => {
-      return {
-        width: "127px",
-        height: "auto",
-        backgroundImage: `url(https://static.360buyimg.com/jdcdkh/open/1.0.0/assets/bg-coupon.6df5b4ed.png)`,
-        marginRight: `10px`,
-        marginBottom: `10px`,
-      };
-    }, []);
-    //优惠券主体样式
-    const couponMainSmallStyle = useMemo(() => {
-      return {
-        width: "80%",
-        color: "red",
-      };
-    }, []);
-    //渲染优惠券文案
-    const couponObj = useMemo(() => {
-      return {
-        price: 9,
-        currency: "¥",
-        mainTitle: "满100元可用",
-        subTitle: "仅可购买满折券测试",
-        label: "618",
-      };
-    }, []);
-    //已经使用的icon标记
-    const usedIcon = useMemo(() => {
-      return (
-        <img
-          src="https://storage.360buyimg.com/jdcdkh/open/1.0.0/assets/use-mask.60dc7c10.png"
-          width="45px"
-          height="42px"
-        />
-      );
-    }, []);
-
-    const [arrReceived, setArrReceived] = useState([]);
-    //点击小优惠券领取按钮交互
-    const receivedBtn = useCallback(
-      (item) => {
-        console.log(item);
-        if (!arrReceived.includes(item.item)) {
-          arrReceived.push(item.item);
-        }
-        setArrReceived([...arrReceived]);
-      },
-      [arrReceived]
-    );
-
     return (
       <>
         <Row>
           {getTab(item).map((v, i) => (
-            <Col span={4} key={i}>
+            <Col span={6} key={i}>
               <Tag color="#FA2400" plain>
-                {v}
+                <span style={{ fontSize: 10 }}>{v}</span>
               </Tag>
             </Col>
           ))}
         </Row>
+        <div className="flex">
+          <div>{getPlatformLogo(platform)}</div>
+          <div>
+            <Ellipsis content={item.name} direction="end" rows="1" />
+          </div>
+        </div>
         <Row>
-          <Col span={4}>
-            <Dongdong />
-          </Col>
-          <Col span={20}>
-            <Ellipsis content={item.name} direction="end" rows="2" />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={14}>
-            <Price price={10} size="small" needSymbol thousands />
-          </Col>
           <Col span={10}>
-            {/* <Price
-              price={5}
-              size="normal"
-              position="after"
-              symbol="券"
-              needSymbol
-              thousands
-            /> */}
-            <Coupon
-              pricePosition="front"
-              type="small"
-              usedIcon={usedIcon}
-              couponMainStyle={couponMainSmallStyle}
-              couponStyle={couponSmallStyle}
-              couponData={{ ...couponObj }}
-              onBtnClick={receivedBtn}
-            ></Coupon>
+            <Price price={10} needSymbol size="normal" thousands />
+          </Col>
+          <Col span={6}></Col>
+          <Col span={8}>
+            <div
+              className="flex justify-center items-center"
+              style={{
+                background: `url(${couponIcon})  center center / cover no-repeat`,
+                color: "#fff",
+                width: 39,
+                height: 23,
+              }}
+            >
+              {50}
+            </div>
           </Col>
         </Row>
-        <Row>
-          <Col span={12}>**********</Col>
-          <Col span={12}>月销1000+</Col>
-        </Row>
+        <div className="flex text-xs justify-between">
+          <div>特步旗舰店</div>
+          <div className="text-gray-400">月销1000+</div>
+        </div>
       </>
     );
   };
@@ -182,7 +128,7 @@ function Feed({ platform }) {
   }, []);
 
   return (
-    <div className="demo product-feed-demo">
+    <div className="demo product-feed-demo bg-slate-100">
       <ProductFeed
         infiniteloadingProps={{
           hasMore: true, // 是否还有更多数据
@@ -196,6 +142,8 @@ function Feed({ platform }) {
         data={listDouble}
         col={2} // 每行商品数量，可选值有 1、 2
         onClick={handleClick}
+        imgWidth="160px"
+        imgHeight="160px"
       />
     </div>
   );

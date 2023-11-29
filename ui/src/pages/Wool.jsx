@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SearchBar, Tabs, Image } from "@nutui/nutui-react";
+import { SearchBar, Tabs, Image, Empty } from "@nutui/nutui-react";
 /**
  * 羊毛组件
  */
@@ -33,6 +33,7 @@ function Wool() {
         {panelList.map((v) => (
           <Tabs.TabPane title={v.name} key={v.id}>
             {v.name}
+            <Empty status="empty" description="无内容" />
           </Tabs.TabPane>
         ))}
       </Tabs>

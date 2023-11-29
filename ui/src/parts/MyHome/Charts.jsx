@@ -1,43 +1,46 @@
-import { useMemo } from "react";
-import { Image, Cell, Price } from "@nutui/nutui-react";
+import { Image, Price, Ellipsis } from "@nutui/nutui-react";
 import { HorizontalScrolling, Coupon } from "@nutui/nutui-biz";
-import { Jimi40 } from "@nutui/icons-react";
-import jd from "@/assets/jd.svg";
-import tb from "@/assets/tb.svg";
-import tm from "@/assets/tm.svg";
-import pdd from "@/assets/pdd.svg";
+import getPlatformLogo from "@/utils/getPlatformLogo";
+import { useNavigate } from "react-router-dom";
 
 function Charts() {
   // 数据需要传进来
+  const navigate = useNavigate();
+
+  const handleClick = (item, index) => {
+    // 带着id跳转到详情
+    navigate(
+      "/detail?platform=pdd&goodSign=E9_2zvybn4hKtOylwfvcrAvqomLECox6_JQSC0yijXh"
+    );
+  };
 
   return (
     <>
       <div className="demo">
         排行榜
-        <Cell className="nut-cell-left-zero">
-          <HorizontalScrolling showMask={false}>
-            {[1, 2, 3, 4, 5, 6].map((item) => {
-              return (
-                <div
-                  className="nb-horizontalscrolling__contain-item"
-                  key={item}
-                >
-                  <Image src="https://img13.360buyimg.com/imagetools/s140x140_jfs/t1/209493/27/20842/369749/6260d2eeE02eb253c/97386232ecf1c1ef.jpg" />
-                  <div style={{ display: "flex" }}>
-                    {/* <Jimi40 /> */}
-                    {/* <Image src={cp} /> */}
-                    <div>尿不湿</div>
-                  </div>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Price price={15} size="normal" thousands digits={0} />
-                  </div>
+        <HorizontalScrolling showMask={false} className="px-2">
+          {[1, 2, 3, 4, 5, 6].map((item) => {
+            return (
+              <div
+                className="nb-horizontalscrolling__contain-item"
+                key={item}
+                onClick={handleClick}
+              >
+                <Image src="https://img13.360buyimg.com/imagetools/s140x140_jfs/t1/209493/27/20842/369749/6260d2eeE02eb253c/97386232ecf1c1ef.jpg" />
+                <Ellipsis
+                  content={"尿不湿尿不湿尿不湿尿不湿尿不湿"}
+                  direction="end"
+                  rows="1"
+                  className="py-1"
+                />
+                <div className="flex justify-between px-1">
+                  {getPlatformLogo("pdd")}
+                  <Price price={15} size="normal" thousands digits={0} />
                 </div>
-              );
-            })}
-          </HorizontalScrolling>
-        </Cell>
+              </div>
+            );
+          })}
+        </HorizontalScrolling>
       </div>
     </>
   );

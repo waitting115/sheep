@@ -31,7 +31,7 @@ function MyHome() {
 
   return (
     <>
-      <SearchBar placeholder="111" />
+      <SearchBar placeholder="" />
       <ActiveSwiper />
       <Charts />
       <Tabs
@@ -39,11 +39,12 @@ function MyHome() {
         onChange={(value) => {
           setTab1value(value);
         }}
+        className="tabPane"
         // activeType="smile"
       >
         {panelList.map((v) => (
           <Tabs.TabPane title={v.name} key={v.id}>
-            <Feed id={v.id} />
+            <Feed platform={v.id} />
           </Tabs.TabPane>
         ))}
       </Tabs>

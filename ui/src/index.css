@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -83,5 +87,9 @@ div.demo .nb-horizontalscrolling__contain-item img {
   height: 100%;
 }
 div.demo.product-feed-demo {
-  padding: 0;
+  padding: 10px 0;
+}
+
+div.tabPane .nut-tabpane {
+  padding: 10px 0;
 }

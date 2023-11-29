@@ -1,14 +1,25 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { Row, Col, Swiper, SwiperItem } from "@nutui/nutui-react";
-import { CartBar, CartBarIcon, CartBarButton } from "@nutui/nutui-biz";
+import {
+  Row,
+  Col,
+  Swiper,
+  SwiperItem,
+  NavBar,
+  Toast,
+  Image,
+} from "@nutui/nutui-react";
+import { CartBar, CartBarIcon, CartBarButton, Coupon } from "@nutui/nutui-biz";
 import request from "@/utils/request";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import PriceTrend from "@/parts/Detail/PriceTrend";
+import { Left, Share, Close } from "@nutui/icons-react";
+import { Shop } from "@nutui/icons-react";
 
 /**
  * 商品详情组件
  */
 function Detail() {
+  const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
   const platform = searchParams.get("platform");
   const goodSign = searchParams.get("goodSign");
@@ -33,7 +44,6 @@ function Detail() {
   };
 
   const [initPage1, setInitPage1] = useState(0);
-  const [height, setHeight] = useState(150);
   const onChange = (e) => {
     // do something
   };
@@ -307,10 +317,25 @@ function Detail() {
 
   return (
     <>
+      <NavBar
+        back={
+          <>
+            <Left name="left" color="#979797" />
+          </>
+        }
+        right={
+          <span onClick={(e) => Toast.show("icon")}>
+            <Share />
+          </span>
+        }
+        onBackClick={() => navigate(-1)}
+      >
+        <span>商品详情</span>
+      </NavBar>
       <Row>
         <Col span={24}>
           <Swiper
-            height={height}
+            height={200}
             paginationColor="#426543"
             paginationBgColor="#426ddd"
             autoPlay="3000"
@@ -319,65 +344,72 @@ function Detail() {
             onChange={onChange}
           >
             <SwiperItem>
-              <img
+              <Image
                 src="https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg"
                 alt=""
+                height="200"
               />
             </SwiperItem>
             <SwiperItem>
-              <img
+              <Image
                 src="https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg"
                 alt=""
+                height="200"
               />
             </SwiperItem>
             <SwiperItem>
-              <img
+              <Image
                 src="https://storage.360buyimg.com/jdc-article/welcomenutui.jpg"
                 alt=""
+                height="200"
               />
             </SwiperItem>
             <SwiperItem>
-              <img
+              <Image
                 src="https://storage.360buyimg.com/jdc-article/fristfabu.jpg"
                 alt=""
+                height="200"
               />
             </SwiperItem>
           </Swiper>
         </Col>
       </Row>
-      <Row>
-        <Col>titletitletitletitletitletitletitletitletitletitletitletitle</Col>
+      <Row className="px-2">
+        <Col span={24} className="text-left">
+          尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿尿不湿
+        </Col>
       </Row>
-      {/* <div style={demoStyle}> */}
-      <Row>
-        <Coupon
-          pricePosition="back"
-          couponStyle={couponBaseStyle}
-          couponMainStyle={couponMainBaseStyle}
-          couponData={baseCouponObj}
-          btnText={btnText}
-          isReceived={receivedStatus}
-          usedIcon={usedIcon}
-          buttonProps={buttonProps}
-          onBtnClick={basedOnClick}
-        ></Coupon>
-      </Row>
-      {/* </div> */}
-      <Row>
-        <Col span={12}>**********</Col>
-        <Col span={12}>月销1000+</Col>
+      <div className="flex justify-between px-2">
+        <div>特步旗舰店</div>
+        <div className="text-gray-400 text-xs">月销1000+</div>
+      </div>
+      <Row className="px-2">
+        <Col span={24}>
+          <Coupon
+            pricePosition="back"
+            couponStyle={couponBaseStyle}
+            couponMainStyle={couponMainBaseStyle}
+            couponData={baseCouponObj}
+            btnText={btnText}
+            isReceived={receivedStatus}
+            usedIcon={usedIcon}
+            buttonProps={buttonProps}
+            onBtnClick={basedOnClick}
+          ></Coupon>
+        </Col>
       </Row>
       <Row>
         <Col span={24}>
-          <PriceTrend data="chartData" />
+          <PriceTrend chartData={chartData} />
         </Col>
       </Row>
-      <CartBar placeholder={true}>
-        <CartBarIcon text="店铺" iconProps={{ name: "shop" }} />
-        <CartBarIcon text="加入降价提醒" iconProps={{ name: "cart" }} />
-        <CartBarButton text="复制口令" buttonProps={{ type: "danger" }} />
-        <CartBarButton text="领券购买" buttonProps={{ type: "warning" }} />
-      </CartBar>
+      <div className="demo">
+        <CartBar placeholder={true}>
+          <CartBarIcon text="加入降价提醒" iconProps={{ name: "Shop" }} />
+          <CartBarButton text="复制口令" buttonProps={{ type: "danger" }} />
+          <CartBarButton text="领券购买" buttonProps={{ type: "warning" }} />
+        </CartBar>
+      </div>
     </>
   );
 }

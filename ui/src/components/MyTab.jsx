@@ -10,7 +10,7 @@ const MyTab = () => {
 
   return (
     <>
-      {routerList.includes(currentPath) ? (
+      {routeList.includes(currentPath) ? (
         <Tabbar
           fixed
           onSwitch={(value) => {
