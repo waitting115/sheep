@@ -12,11 +12,11 @@ let menu = [
 const initCustomMenu = async () => {
   try {
     const token = await getToken();
-    const form = new FormData();
-    form.append("button", JSON.stringify(menu));
     const res = await axios.post(
       `https://api.weixin.qq.com/cgi-bin/menu/create?access_token=${token}`,
-      form
+      {
+        button: menu,
+      }
     );
     if (res.errcode === 0) {
       // {"errcode":0,"errmsg":"ok"}

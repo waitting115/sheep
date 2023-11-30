@@ -2,7 +2,7 @@ const http = require("http");
 const url = require("url");
 
 const normalReq = require("./utils/normalReq");
-const { VxMessage } = require("./VxMessage");
+const { VxMessage } = require("./modules/VxMessage");
 const { VxCheck } = require("./modules/VxCheck");
 const {initVXAccessToken} = require("./modules/AccessToken");
 const {initCustomMenu} = require("./modules/customMenu");

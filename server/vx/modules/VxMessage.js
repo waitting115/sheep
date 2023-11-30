@@ -1,6 +1,6 @@
-const normalReq = require('./utils/normalReq');
-const handlePostData = require('./utils/handlePostData');
-const buildXMLReply = require('./utils/buildXMLReply');
+const normalReq = require('../utils/normalReq');
+const handlePostData = require('../utils/handlePostData');
+const buildXMLReply = require('../utils/buildXMLReply');
 const xml2js = require("xml2js");
 
 function VxMessage(req, res) {
