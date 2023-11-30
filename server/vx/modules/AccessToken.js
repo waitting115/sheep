@@ -25,10 +25,17 @@ const requestVXAccessToken = async () => {
 };
 
 const initVXAccessToken = async () => {
-  requestVXAccessToken();
+  await requestVXAccessToken();
   setInterval(() => {
     requestVXAccessToken();
-  }, 2 * 60 * 60 * 1000);
+  }, 2 * 60 * 59 * 1000);
 };
 
-module.exports = initVXAccessToken;
+const getToken = async () => {
+  if (vx_access_token === "") {
+    await requestVXAccessToken();
+  }
+  return vx_access_token;
+};
+
+module.exports = { initVXAccessToken, getToken };
