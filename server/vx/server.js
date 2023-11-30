@@ -14,7 +14,7 @@ const app = http.createServer((req, res) => {
 
   if (req.method === "GET") {
     if (parsedUrl.pathname === "/vx") {
-      VxCheck(parsedUrls, res);
+      VxCheck(parsedUrl, res);
     } else {
       console.log(`未知的url：${req.url}`);
       res.writeHead(200, { "Content-Type": "application/xml" });
