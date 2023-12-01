@@ -7,8 +7,8 @@ const { VxCheck } = require("./modules/VxCheck");
 const {initVXAccessToken} = require("./modules/AccessToken");
 const {initCustomMenu} = require("./modules/customMenu");
 
-initVXAccessToken();
-initCustomMenu();
+// initVXAccessToken();
+// initCustomMenu();
 
 const app = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
