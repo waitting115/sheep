@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? './' : '',
+  base: process.env.NODE_ENV === 'production' ? '/' : './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: process.env.NODE_ENV === 'production' ? '/var/www/miemie' : './dist',
+    outDir: '/var/www/miemie', // './dist'
 },
 });
