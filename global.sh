@@ -4,8 +4,7 @@
 new_variables=(
   "DATABASE_HOST=3306"
   "DATABASE_USER=root"
-  "DATABASE_PASSWORD=ccdd"
-  "DATABASE_NAME=user"
+  "DATABASE_PASSWORD=sheepcygg"
 )
 
 # 读取当前环境变量
